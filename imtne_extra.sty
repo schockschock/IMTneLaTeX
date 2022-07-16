@@ -1,0 +1,286 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% File Name:        imtne_extra
+%
+% Description:      Enables advanced functionalities of the IMT Nord Europe
+%                   LaTeX Template.
+%
+%                   Package options: nouppersectioninlof and nouppersectioninlot
+%
+% Limitations:      /
+%
+% Errors:           None known
+%
+% Dependencies:     mdframed
+%                   minted
+%
+% Author:           A. Schockaert
+%
+% University:       IMT Nord Europe
+%
+% TeX Environment:  Overleaf
+
+
+
+\NeedsTeXFormat{LaTeX2e}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      P A C K A G E S        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Fancy code listings
+\RequirePackage{minted}
+
+% Fancy frames and boxes
+\RequirePackage{mdframed}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      D E F A U L T      E X P O R T       S E T T I N G S        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Some export-related booleans are introduced
+\makeatletter
+    \newif\if@printuppersectioninLOF      \@printuppersectioninLOFtrue
+    \newif\if@printuppersectioninLOT      \@printuppersectioninLOTtrue
+\makeatother
+
+\makeatletter
+    \global\newif\if@uppersectionprintedinLOF  \global\@uppersectionprintedinLOFfalse
+    \global\newif\if@uppersectionprintedinLOT  \global\@uppersectionprintedinLOTfalse
+    \gdef\imtneUpperSectionTitle{\thetitle}
+    \gdef\imtneUpperSectionNumber{\relax}
+\makeatother
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           O P T I O N S          D E C L A R A T I O N           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+    % Disables the printing of the upper section in the List Of Figures
+    \DeclareOption{nouppersectioninlof}{\@printuppersectioninLOFfalse} 
+    % Disables the printing of the upper section in the List Of Tables
+    \DeclareOption{nouppersectioninlot}{\@printuppersectioninLOTfalse}
+\makeatother
+
+\ExecuteOptions{}
+\ProcessOptions\relax
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           C O L O R S           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Colors related to code formatting
+\definecolor{imtneCodeBackground}{RGB}{235, 235, 235}
+\definecolor{imtneCodeLinenosFrame}{RGB}{205, 205, 205}
+\definecolor{imtneInlineCodeBackground}{RGB}{230, 230, 230}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           C O M M A N D S           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \imtneInlinecode
+% Typeset inline code
+% First parameter is the language of the text to typeset
+% Second parameter is the text to typeset
+\newcommand{\imtneInlinecode}[2]{%
+    \setlength{\fboxsep}{2pt}\colorbox{imtneInlineCodeBackground}{\mintinline{#1}{#2}}%
+}
+
+
+% \imtneFrontMatter
+% Resets the page counter and switches to roman numbers (useful for the preamble)
+\makeatletter
+\newif\if@imtneMainMatter \@imtneMainMattertrue
+
+\def\imtneFrontMatter{%
+    \@imtneMainMatterfalse \pagenumbering{roman} \setcounter{page}{1}}
+
+% \imtneMainMatter
+% Resets the page counter and switches to arabic numbers (useful for the main content)
+\def\imtneMainMatter{%
+    \@imtneMainMattertrue \pagenumbering{arabic} \setcounter{page}{1}}
+\makeatother
+
+
+
+% \chapter
+% \chapter is redefined when relevant, in order to update the upper section informations
+\makeatletter
+\@ifundefined{chapter}{%
+     \relax
+    }{%
+     \let\imtneExtraOldChapter\chapter
+     \renewcommand*{\chapter}{\@ifstar{\imtneExtraStarChapter}{\@dblarg\imtneExtraNoStarChapter}}
+     
+     \newcommand*\imtneExtraStarChapter[1]{%
+         \imtneExtraOldChapter*{#1}
+         \gdef\imtneUpperSectionNumber{\relax}
+          \gdef\imtneUpperSectionTitle{#1}
+          \global\@uppersectionprintedinLOFfalse
+          \global\@uppersectionprintedinLOTfalse}
+     
+     \def\imtneExtraNoStarChapter[#1]#2{%
+         \imtneExtraOldChapter[{#1}]{#2}
+         \gdef\imtneUpperSectionNumber{\thechapter. } 
+         \gdef\imtneUpperSectionTitle{#1}
+          \global\@uppersectionprintedinLOFfalse
+          \global\@uppersectionprintedinLOTfalse}
+}
+\makeatother
+
+
+% \section 
+% \section is redefined, in order to update the upper section informations
+\makeatletter
+\@ifundefined{chapter}{%
+ 
+     \let\imtneExtraOldSection\section
+     \renewcommand{\section}{\@ifstar{\imtneExtraStarSection}{\@dblarg\imtneExtraNoStarSection}}
+     \newcommand\imtneExtraStarSection[1]{%
+         \imtneExtraOldSection*{#1}  \gdef\imtneUpperSectionTitle{#1} \gdef\imtneUpperSectionNumber{\relax} \global\@uppersectionprintedinLOFfalse  \global\@uppersectionprintedinLOTfalse}
+     \def\imtneExtraNoStarSection[#1]#2{%
+         \imtneExtraOldSection[{#1}]{#2} \gdef\imtneUpperSectionTitle{#1} \gdef\imtneUpperSectionNumber{\thesection. } \global\@uppersectionprintedinLOFfalse  \global\@uppersectionprintedinLOTfalse}
+    }{%    
+    \relax
+}
+\makeatother
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           E N V I R O N M E N T S           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% imtneCode
+% Format a listing of code
+% The only argument of this environment is the language of the code to format
+%% This environment wraps around minted, and is therefore a verbatim environment
+\newenvironment{imtneCode}[1]{%
+    \VerbatimEnvironment%
+    \renewcommand{\theFancyVerbLine}{\texttt{\textcolor{gray!150}{\normalsize \oldstylenums{\arabic{FancyVerbLine}}}}}%
+    \vspace{0.5\baselineskip}%
+    \begin{mdframed}[backgroundcolor=imtneCodeLinenosFrame, innerrightmargin=0pt, innertopmargin=0pt, innerbottommargin=0pt, linewidth=1pt]
+        \begin{mdframed}[backgroundcolor=imtneCodeBackground, skipabove=0pt, skipbelow=0pt, rightmargin=0pt, leftmargin=3ex, linewidth=0pt, 
+            innertopmargin=5pt, innerbottommargin=5pt, innerleftmargin=1ex]%
+            \begin{minted}[linenos, breaklines]{#1}%
+            }{
+            \end{minted}%
+        \end{mdframed}%
+    \end{mdframed}%
+}
+
+
+
+
+% imtneCodeFromFile{<file>}{<language>}
+% Formats a listing of code from an input file
+% Where <file> is the path to the file and <language> is the minted label
+% for the corresponding language 
+\newcommand{\imtneCodeFromFile}[2]{%    \VerbatimEnvironment%
+    \renewcommand{\theFancyVerbLine}{\texttt{\textcolor{gray!150}{\normalsize \oldstylenums{\arabic{FancyVerbLine}}}}}%
+    \vspace{0.5\baselineskip}%
+    \begin{mdframed}[backgroundcolor=imtneCodeLinenosFrame, innerrightmargin=0pt, innertopmargin=0pt, innerbottommargin=0pt, linewidth=1pt]
+        \begin{mdframed}[backgroundcolor=imtneCodeBackground, skipabove=0pt, skipbelow=0pt, rightmargin=0pt, leftmargin=3ex, linewidth=0pt, 
+            innertopmargin=5pt, innerbottommargin=5pt, innerleftmargin=1ex]%
+            \inputminted[linenos, breaklines]{#2}{#1}
+        \end{mdframed}%
+    \end{mdframed}%
+}
+
+
+% imtneConsole
+% Format a console session
+\newenvironment{imtneConsole}{%
+    \VerbatimEnvironment%
+    \vspace{0.5\baselineskip}%
+    \begin{mdframed}[backgroundcolor=imtneCodeBackground, innerleftmargin=5pt]%
+    \begin{minted}[breaklines]{text}%
+}{
+    \end{minted}%
+    \end{mdframed}%
+}
+
+
+% imtneConsoleFromFile{<file>}
+% Formats a console session from an input file
+% Where <file> is the path to the file
+\newcommand{\imtneConsoleFromFile}[1]{%
+    \vspace{0.5\baselineskip}%
+    \begin{mdframed}[backgroundcolor=imtneCodeBackground, innerleftmargin=5pt]%
+        \inputminted[breaklines]{text}{#1}
+    \end{mdframed}%
+}
+
+
+
+%\figure
+% The figure environment is redefined to update the LOF with the upper section title when relevant
+ \makeatletter 
+     \def\printuppersectioninlof{%
+         \if@uppersectionprintedinLOF
+             \relax
+         \else
+             \if@printuppersectioninLOF
+                \if@chapterdefined
+                     \addcontentsline{lof}{chapter}{\imtneUpperSectionNumber \imtneUpperSectionTitle}
+                 \else
+                     \addcontentsline{lof}{section}{\imtneUpperSectionNumber \imtneUpperSectionTitle}
+                 \fi
+             \fi
+         \fi
+         \global\@uppersectionprintedinLOFtrue}
+     
+     \let\imtneOldfigure\figure
+     
+     \def\figure{\@ifnextchar{[}{\imtneFigurewarg}{\imtneFigurewotarg}}
+     
+     
+     \def\imtneFigurewarg[#1]{%        
+         \imtneOldfigure[#1]\printuppersectioninlof}
+     
+     \def\imtneFigurewotarg{%
+         \imtneOldfigure\printuppersectioninlof}
+ \makeatother
+
+
+
+% \table
+% The table environment is redefined to update the LOT with the upper section title when relevant
+\makeatletter
+    \def\printuppersectioninlot{%
+        \if@uppersectionprintedinLOT
+            \relax
+        \else
+            \if@printuppersectioninLOT
+                \if@chapterdefined
+	                \addcontentsline{lot}{chapter}{\imtneUpperSectionNumber \imtneUpperSectionTitle}
+                \else
+                	\addcontentsline{lot}{section}{\imtneUpperSectionNumber \imtneUpperSectionTitle}
+                \fi
+            \fi
+        \fi
+        \global\@uppersectionprintedinLOTtrue}
+    
+    \let\imtneOldtable\table
+    
+    \def\table{\@ifnextchar{[}{\imtneTablewarg}{\imtneTablewotarg}}    
+    
+    \def\imtneTablewarg[#1]{%        
+        \imtneOldtable[#1]\printuppersectioninlot}
+    
+    \def\imtneTablewotarg{%
+        \imtneOldtable\printuppersectioninlot}
+\makeatother
+
+%%%%%%%%%% END %%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%% 
