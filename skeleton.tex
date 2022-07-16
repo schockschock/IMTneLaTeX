@@ -1,0 +1,84 @@
+\documentclass{report} % for longer documents
+
+
+%% Defining the language for the document
+\usepackage[english]{babel}
+\usepackage[english]{isodate}
+
+\usepackage{imtne_core}
+\usepackage{imtne_extra}
+
+
+%% Addtionnal packages can be loaded here
+% \usepackage{biblatex} % for a complete and flexible bibliography
+
+
+\cleanlookdateon % formats date according to the loaded language from now on
+
+%% General informations
+\author{<AUTHOR>}
+%\imtneAuthorShort{<author's initials>}
+%\imtneSuperviser{<superviser>}
+\date{\noexpand\today} % automatically print today's date, can be redefined using \date{<date>}
+\title{<TITLE>}
+\subtitle{<SUBTITLE>}
+
+%\imtneVersion{<version>}
+
+\imtneAddPartnerLogo{<PARTNER_LOGO_PATH>}
+
+
+\imtneSetIMTStyle % Sets font and headers/footers according to the IMT Nord Europe style guidelines
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%% BEGINNING %%%%%%%%%% 
+\begin{document}
+
+% front cover
+\imtneMaketitlepage
+
+\tableofcontents
+
+\newpage
+
+\section{Greetings}
+
+\section{Abstract and keywords}
+
+\section{Global planning}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%  Introduction   %%%
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+
+% <content>
+\chapter{chapter1}
+
+\section{section}
+
+\subsection{subsection}
+
+\chapter{chapter2}
+
+\section{section}
+
+\subsection{subsection}
+
+\chapter{chapter3}
+
+\section{section}
+
+\subsection{subsection}
+
+% back cover
+\imtneMakeCover
+
+\end{document}
+%%%%%%%%%% END %%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%% 
