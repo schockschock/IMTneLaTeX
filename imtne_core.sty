@@ -1,0 +1,583 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% File Name:        imtne_core
+%
+% Description:      Overall layout and colours of the IMT Nord Europe
+%                   LaTeX Template.
+%
+% Note:             The babel package should be loaded first if used 
+%                   in combination.
+%                   This template is highly inspired by the one wrote 
+%                    by A.Foucault and B.Porteboeuf.
+%
+% Limitations:      /
+%
+% Errors:           None known
+%
+% Dependencies:     anyfontsize
+%                   enumitem
+%                   fancyhdr
+%                   fontenc
+%                   geometry
+%                   graphicx
+%                   hyperref
+%                   inputenc
+%                   mdframed
+%                   pifont
+%                   secsty
+%                   tikz
+%                   titling
+%                   titlesec
+%
+% Author:           A. Schockaert - adrien.schockaert@etu.imt-nord-europe.fr
+%
+% School:       IMT Nord Europe, Lille (France)
+%
+% Credits:           A. Foucault - armand.foucault@telecom-bretagne.eu
+%                    B. Porteboeuf - benoit.porteboeuf@telecom-bretagne.eu
+% Link:              https://github.com/bporteboeuf/imtneLatexTemplate
+%
+% TeX Environment:  overleaf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\NeedsTeXFormat{LaTeX2e}
+
+
+
+%%%%%%%%%% PACKAGES %%%%%%%%%%
+
+% Document geometry management
+\@ifpackageloaded{geometry}{\relax}{\RequirePackage[a4paper, margin=2cm, top=3cm]{geometry}}
+
+% Images management
+\RequirePackage{graphicx}
+
+% Output font management
+\RequirePackage[T1]{fontenc}
+
+% Cross-referencing
+\@ifpackageloaded{hyperref}{\relax}{\RequirePackage[hidelinks]{hyperref}}
+
+% Document encoding management
+\RequirePackage[utf8]{inputenc}
+
+% Fancy headers and footers
+\RequirePackage{fancyhdr}
+
+% Pictures drawing
+\RequirePackage{tikz}
+
+% For title style customization
+\RequirePackage{titlesec}
+
+% Metadata access
+\RequirePackage{titling}
+
+% Arbitrary font size
+%\RequirePackage{anyfontsize} % Superfluous?
+
+% Section styling
+\RequirePackage{sectsty}
+
+% Import \setitemize for list customization
+\RequirePackage{enumitem}
+
+% Import fancy characters for list bullet customization
+\RequirePackage{pifont}
+
+% Fancy frames and boxes
+\RequirePackage{mdframed}
+
+
+
+%%%%%%%%%% COLORS %%%%%%%%%%
+
+% The three colors of imtne: green, light blue, and dark blue, plus the gray
+\definecolor{imtneYellow}{RGB}{251, 186, 0}
+\definecolor{imtneLightBlue}{RGB}{0, 184, 222}
+\definecolor{imtneDarkBlue}{RGB}{12, 35, 64}
+\definecolor{imtneGray}{RGB}{87, 87, 87}
+
+\definecolor{imtneQuoteBackground}{RGB}{245, 245, 245}
+
+
+
+%%%%%%%%%% GENERAL SETTINGS %%%%%%%%%%
+
+\raggedbottom
+
+% Itemize customization
+\setitemize[1]{label=\textcolor{imtneLightBlue}{\small\ding{228}}}
+\setitemize[2]{label=\textbullet}
+
+% Enumerate customization
+\setenumerate[1]{font=\bf\color{imtneLightBlue}}
+\setenumerate[2]{font=\color{imtneDarkBlue}}
+
+
+%%%%%%%%%% PACKAGES SETTINGS %%%%%%%%%%
+
+
+% fancyhdr
+% Define the header and footer
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[L]{\thetitle}
+\fancyhead[R]{\imtneTheAuthorShort}
+\fancyfoot[C]{\thepage}
+
+\makeatletter
+    % upper section number / title are defined
+    \gdef\imtneUpperSectionTitle{\thetitle}
+    \gdef\imtneUpperSectionNumber{\relax}
+\makeatother
+
+
+
+%%%%%%%%%% COMMANDS %%%%%%%%%%
+
+% Some variables are defined to avoid possible errors
+\title{\relax}
+\author{\relax}
+\date{\~}
+
+% \subtitle
+% Command for the cover's subtitle
+\newcommand{\subtitleValue}{}
+\newcommand{\subtitle}[1]{%
+    \renewcommand{\subtitleValue}{#1}
+}
+
+% \imtneTheAuthorShort
+% Command for the short version of the author
+\def\imtneTheAuthorShort{\theauthor}
+\def\imtneAuthorShort#1{\def\imtneTheAuthorShort{#1}}
+
+
+% \imtneSuperviser
+% Command to set the supervisers names as \imtneTheSuperviser
+\def\imtneSuperviser#1{\def\imtneTheSuperviser{#1}}
+\def\imtneTheSuperviser{\relax}
+
+
+% \imtneVersion
+% Command to set the document's version as \imtneTheVersion
+\def\imtneVersion#1{\def\imtneTheVersion{#1}}
+\def\imtneTheVersion{\relax}
+
+
+
+% \imtneQuestion
+% Output "Question" followed by the current question number
+% The \imtneQuestionReset command should be called after each new section or subsection,
+% in order to resest the question counter
+\newcounter{imtneQuestionCounter}
+\newcommand{\imtneQuestion}{%
+    \stepcounter{imtneQuestionCounter}%
+    \subsection*{Question \arabic{imtneQuestionCounter}}%
+}
+
+
+% \imtneQuestionReset
+% Reset the question counter
+\newcommand{\imtneQuestionReset}{%
+    \setcounter{imtneQuestionCounter}{0}%
+}
+
+
+% \imtneAddPartnerLogo
+% Enables the printing of a partner's logo on the main title page, next to IMT Nord Europe's
+% Its largest dimension is set to the corresponding dimension of the IMT Nord Europe's logo.
+% Argument: relative path to the resource
+\newcounter{imtneLogoCounter}     \setcounter{imtneLogoCounter}{0}
+\newcommand{\imtneAddPartnerLogo}[2][\relax]{%
+    % The logo counter is increased and the path is stored in a new command (emulates an array)
+    \global\addtocounter{imtneLogoCounter}{1}
+    \global\expandafter\def\csname imtnePartnerLogo\theimtneLogoCounter\endcsname{#2}
+    % The \includegraphics options are also saved
+    \global\expandafter\def\csname imtnePartnerLogo\theimtneLogoCounter Options\endcsname{#1}}
+
+% \imtnePartnerLogo
+% Prints the path of the resource associated with the given number, in 0..\imtneLogoCounter
+\def\imtnePartnerLogo#1{\csname imtnePartnerLogo#1\endcsname}
+\def\imtnePartnerLogoOptions#1{\csname imtnePartnerLogo#1Options\endcsname}
+
+
+
+% \imtneLogo
+% Include the imtne logo according to the given width
+\newcommand\imtneLogo[1]{%
+    \includegraphics[width = #1, trim = 1.4cm 2cm 1.5cm 1.25cm, clip]{imtne_logo.pdf}
+}
+
+
+% \imtneLogoTikz
+% Outputs the IMT Nord Europe logo using tikz according to the given width
+\newcommand{\imtneLogoTikz}[1]{%
+    \resizebox{#1}{!}{%
+        \begin{tikzpicture}[every node/.style={inner sep=0,outer sep=0}]
+%            \draw (-1,1) -- (8,1);
+%            \draw (-1,0) -- (8,0);
+%            \draw (-1,-1) -- (8,-1);
+%            \draw (-1,-2) -- (8,-2);
+%            \draw (-1,-3) -- (8,-3);
+%            \draw (-1,-4) -- (8,-4);
+%            \draw (-1,-5) -- (8,-5);
+%            \draw (-1,1) -- (-1,-5);
+%            \draw (0,1) -- (0,-5);
+%            \draw (1,1) -- (1,-5);
+%            \draw (2,1) -- (2,-5);
+%            \draw (3,1) -- (3,-5);
+%            \draw (4,1) -- (4,-5);
+%            \draw (5,1) -- (5,-5);
+%            \draw (6,1) -- (6,-5);
+%            \draw (7,1) -- (7,-5);
+%            \draw (8,1) -- (8,-5);
+    
+            \fill[imtneLightBlue] (0,0) -- (2,0) -- (3,-1) -- (4,0) -- (4,-1) -- %
+                                          (5,0) -- (7,0) -- (5,-2) -- (5,-1) -- (4,-1) -- %
+                                          (4,-2) -- (2,-2) -- (2,0) -- (0,-2) -- (0,0);
+            \node [anchor=west] at (-0.145,-2.68) {
+                \fontsize{20}{23}
+                \fontfamily{phv}\selectfont \textbf{IMT Nord Europe}};
+            \node [anchor=north west] at (-0.145,-3.13) {
+                \fontsize{15}{18}
+                \fontfamily{phv}\selectfont Hauts de France};
+            \node [anchor=south west] at (-0.145,-4.18) {
+                \fontsize{15}{18}
+                \fontfamily{phv}\selectfont École Mines-Télécom};
+        \end{tikzpicture}  
+    }
+}
+
+
+
+% \imtneMaketitlepage
+% Output the title page, with regards for the IMT Nord Europe official style
+% This is a twocolumns robust titlepage commands
+\makeatletter
+
+% \imtneGetEltSize
+% Gets the 1/10th of the smallest dimension of the paper used
+\def\imtneGetEltSize{%
+    \ifdim \paperwidth < \paperheight
+        \paperwidth/10
+    \else
+        \paperheight/10
+    \fi%
+}
+
+% \imtneMaketitlepage
+% Generates the title page
+\newcommand\imtneMaketitlepage{%
+    \clearpage
+    \if@twocolumn
+        \onecolumn % we force it to a one column environment
+        \imtneTitleLayout
+        \twocolumn
+    \else
+        \imtneTitleLayout
+    \fi
+}
+
+% \imtneTitleLayout
+% Corresponds to the actual layout used for the cover by \imtneMaketitlepage
+\def\imtneTitleLayout{%
+    % Geometry and pagestyle
+    \thispagestyle{empty}
+    \pagenumbering{gobble}
+    \newgeometry{top = .5cm, bottom = 1.5cm, left = 2cm, right = 1cm}
+    % Drawing the triangles
+    \begin{flushright}
+        \begin{tikzpicture}
+            \filldraw[draw=imtneYellow,fill=imtneYellow] (-3\imtneGetEltSize,0) -- (0,-3\imtneGetEltSize) -- (0\imtneGetEltSize,0) -- cycle;
+            \filldraw[draw=imtneLightBlue,fill=imtneLightBlue] (-2.24\imtneGetEltSize,-3\imtneGetEltSize) -- (0,-5.24\imtneGetEltSize) -- (0,-3\imtneGetEltSize) -- cycle;
+            \filldraw[draw=imtneDarkBlue,fill=imtneDarkBlue] (-5.24\imtneGetEltSize,0) -- (-2.24\imtneGetEltSize,-3\imtneGetEltSize) -- (-5.24\imtneGetEltSize,-3\imtneGetEltSize) -- cycle;
+            
+            \node (date) [draw=none, text width=\textwidth, align=left, minimum height = 2\imtneGetEltSize, 
+            anchor=south west] at (-\textwidth, -6\imtneGetEltSize) {
+                \vfill
+                \large\fontfamily{phv}\selectfont\thedate\linebreak
+                \large\fontfamily{phv}\selectfont\theauthor\linebreak
+                \if\imtneTheSuperviser\relax\relax
+                    \relax
+                \else
+                    \linebreak
+                    \large\fontfamily{phv}\imtneTheSuperviser\linebreak
+                \fi};
+        \end{tikzpicture}
+    \end{flushright}
+    % Printing the title and other relevant informations
+    \begingroup
+    \begin{minipage}{.92\textwidth}
+        \textcolor{imtneYellow}{\fontsize{25}{40}\fontseries{b}\fontfamily{phv}\selectfont\thetitle} \vspace*{.5cm}\\
+        \textcolor{imtneYellow}{\Large\fontfamily{phv}\selectfont\subtitleValue}
+        \begin{flushright}
+            \vspace{.5cm}
+            \fontfamily{phv}\selectfont\normalsize\imtneTheVersion
+        \end{flushright}
+    \end{minipage}
+    \vfill
+    % Displaying the school's logo
+    \begin{flushleft}
+        \begin{minipage}{.92\textwidth}
+            \newlength\imtne@picWidth
+            \begin{minipage}{5.3cm}
+                \imtneLogoTikz{5.3cm}
+            \end{minipage}%
+            % Adding any potential user-defined partner's logo
+            \newcounter{imtne@idx}   \setcounter{imtne@idx}{0}%
+            \newlength\imtne@oldlinewidth
+            \newlength\imtne@oldtextwidth
+            \loop
+                \addtocounter{imtne@idx}{1}
+                \ifnum\value{imtneLogoCounter}>0%
+                    \edef\imtne@thelogo{\imtnePartnerLogo{\theimtne@idx}} % Expansion is enforced
+                    \edef\imtne@thelogooptions{\imtnePartnerLogoOptions{\theimtne@idx}} % Expansion is enforced
+                    % Default dimensions are based on the IMT Nord Europe logo
+                    \if\imtne@thelogooptions\relax\relax
+                        \edef\imtne@thelogooptions{width=5.3cm, height=3cm, keepaspectratio}
+                    \fi
+                    % Because of the behavior of \includegraphics, we need to be very careful about our expansions of macros here
+                    \settowidth\imtne@picWidth{\expandafter\includegraphics\expandafter[\imtne@thelogooptions]{\imtne@thelogo}}
+                    % In order for the user to be able to use relative widths, we need to store the current values and redefine them in the minipage environment
+                    \setlength\imtne@oldlinewidth{\linewidth}
+                    \setlength\imtne@oldtextwidth{\textwidth}
+                    \hfill
+                    \begin{minipage}{\imtne@picWidth}
+                        \setlength\linewidth{\imtne@oldlinewidth}
+                        \setlength\textwidth{\imtne@oldtextwidth}
+                        \expandafter\includegraphics\expandafter[\imtne@thelogooptions]{\imtne@thelogo}
+                    \end{minipage}
+%                    \hfill
+                \fi
+                \ifnum\value{imtne@idx}<\value{imtneLogoCounter}
+                    \repeat
+        \end{minipage}
+    \end{flushleft}
+    \endgroup
+    \cleardoublepage
+    \restoregeometry
+    \pagenumbering{arabic}
+    \setcounter{page}{2}
+}
+
+\makeatother
+
+
+
+% \imtneMakeCover
+% Generates a standard back cover which ends on the left side
+\makeatletter
+\newcommand{\imtneMakeCover}{%
+    \clearpage
+    \if@twocolumn
+        \clearpage
+        \onecolumn
+    \fi
+    
+    \if@twoside
+        \ifodd\c@page
+            \shipout\null % We force the left page
+        \fi
+    \fi
+    \newpage \thispagestyle{empty}
+    \newgeometry{margin=2cm, top=3cm}
+    \begingroup
+    \fontfamily{phv}\selectfont
+    \footnotesize
+    \begin{center}
+        \begin{minipage}{.85\textwidth}
+            \vspace*{.73\textheight}
+            \centerline{\imtneLogoTikz{4cm}}
+            \vspace*{1.25cm}
+            %    \newline
+            \begin{flushleft}
+                IMT Nord Europe - Hauts de France - \href{https://imt-nord-europe.fr/}{https://imt-nord-europe.fr/}\\
+            \end{flushleft}
+            \begin{minipage}{.28\textwidth}
+                Campus de Lille\\
+                Rue Guglielmo Marconi, 59650 Villeneuve-d'Ascq\\
+                T +33 03 20 33 55 77
+            \end{minipage}
+            \hfill
+            \begin{minipage}{.34\textwidth}
+                Campus de Douai\\
+                941 Rue Charles Bourseul, 59500 Douai\\
+                03 27 71 22 22\\
+            \end{minipage}
+            \hfill
+            \begin{minipage}{.28\textwidth}
+            \end{minipage}
+        \end{minipage}
+    \end{center}
+    \endgroup
+    \restoregeometry
+}
+\makeatother
+
+
+% \imtneSetIMTStyle
+% Set a styling that conforms to the official report template
+\makeatletter
+\newcommand{\imtneSetIMTStyle}{%
+    % Set global font to Helvetica
+    \usepackage{helvet}
+    \renewcommand{\familydefault}{\sfdefault}
+
+    % Set heading style
+    \sectionfont{\bf\LARGE\color{imtneYellow}}
+    \subsectionfont{\bf\Large\color{imtneGray}}
+    \subsubsectionfont{\bf\large\color{imtneGray}}
+    \paragraphfont{\color{imtneGray}}
+    \subparagraphfont{\color{imtneGray}}
+
+    % Set header and footer style
+    \pagestyle{fancy}
+    \fancyhead{}
+    \fancyfoot{}
+    \fancyhead[L]{\if\imtneUpperSectionNumber\relax\relax
+                    \imtneUpperSectionTitle
+                  \else
+                     \@ifundefined{chapter}{\relax}{\chaptername{}} \imtneUpperSectionNumber \imtneUpperSectionTitle
+                  \fi}%\nouppercase\leftmark}
+    \fancyfoot[R]{\thepage}
+}
+\makeatother
+
+
+% \subsubsubsection
+% We introduce another layer with the \subsubsubsection command
+\setcounter{secnumdepth}{4}                              % We increase the counters' level of visibility to 4
+\newcommand\subsubsubsection{}                           % We create a new command
+\titleclass{\subsubsubsection}{straight}[\subsubsection] % Make it a title command
+\newcounter{subsubsubsection}[subsubsection]             % We create a new counter that inherits from subsubsection
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}} % The complete counter is updated
+\titlespacing{\subsubsubsection}{0pt}{2em}{1em}                                % Spacing is updated
+\titleformat{\subsubsubsection}[hang]{\normalsize\it}                % Layout is updated
+{\thesubsubsubsection.}{1em}{\normalsize\it}[\normalsize] % Formatting is updated
+
+% Adjusting Table Of Contents levels for the \subsubsubsection
+\makeatletter
+    \setcounter{tocdepth}{6} % We increase the level of visibility in the TOC
+    \def\toclevel@subsubsubsection{4}
+    \def\l@subsubsubsection{\@dottedtocline{5}{11em}{5em}}
+    \def\toclevel@paragraph{5}
+    \def\l@paragraph{\@dottedtocline{5}{14em}{6em}}
+    \def\toclevel@subparagraph{6}
+    \def\l@subparagraph{\@dottedtocline{6}{17em}{7em}}
+\makeatother
+
+
+% \chapter
+% \chapter is redefined to support other features
+ \makeatletter
+     \newif\if@chapterdefined % A new \if statement is created to allow easier checking for the existance of \chapter
+     \@ifundefined{chapter}{\global \@chapterdefinedfalse}{\global \@chapterdefinedtrue}
+     
+     % \imtneChapterFigure
+     % A TikzFigure is defined for chapter pages
+     \def\imtneChapterFigure{
+         \vspace*{\fill}
+         \begin{flushright}
+             \begin{tikzpicture}
+             \filldraw[draw=imtneLightBlue,fill=imtneLightBlue] (-5.24\imtneGetEltSize,-5.24\imtneGetEltSize) -- (0,0) -- (0,-5.24\imtneGetEltSize) -- cycle;
+             \filldraw[draw=imtneDarkBlue,fill=imtneDarkBlue] (0,0) -- (-2.54\imtneGetEltSize,-2.54\imtneGetEltSize) -- (0,-2.54\imtneGetEltSize) -- cycle;
+             \filldraw[draw=imtneYellow,fill=imtneYellow] (-2.54\imtneGetEltSize,-5.24\imtneGetEltSize) -- (0,-5.24\imtneGetEltSize) -- (0,-2.54\imtneGetEltSize) -- cycle;
+             \end{tikzpicture}
+         \end{flushright}
+         \normalsize    
+     }
+     
+     % The chapter command is redefined when relevant.
+     % It becomes more robust to oneside/twoside and onecolumn/twocolumn options and imports a figure
+     \if@chapterdefined        
+        
+         \let\imtneOldChapter\chapter % The reference command is saved and a new one is redefined, based on the old. 
+         % It is VERY important to catch the star version as well, otherwise it will not compile
+         \renewcommand*{\chapter}{\@ifstar{\imtneStarChapter}{\@dblarg\imtneNoStarChapter}}
+         
+         \newcommand*\imtneStarChapter[1]{%
+             \if@twocolumn % We want to make sure the chapter page is always on a one column full page
+                 \onecolumn 
+                 \cleardoublepage 
+                 \newgeometry{top = 4cm, bottom = 1cm, left = 2cm, right = 1cm}
+                 \begin{minipage}{.92\textwidth}
+                 \imtneOldChapter*{#1}
+                 \end{minipage}
+                 \imtneChapterFigure
+                 % upper section number / title are defined
+                 \gdef\imtneUpperSectionNumber{\relax}
+                 \gdef\imtneUpperSectionTitle{#1}
+                 \clearpage \newpage \restoregeometry \twocolumn                
+             \else
+             \cleardoublepage 
+             \newgeometry{top = 4cm, bottom = 1cm, left = 2cm, right = 1cm}
+             \begin{minipage}{.92\textwidth}
+             \imtneOldChapter*{#1}
+             \end{minipage}
+             \imtneChapterFigure
+             % upper section number / title are defined
+             \gdef\imtneUpperSectionNumber{\relax}
+             \gdef\imtneUpperSectionTitle{#1}
+             \clearpage \newpage \restoregeometry
+             \fi    
+         }
+         
+         \def\imtneNoStarChapter[#1]#2{%
+             \if@twocolumn % We want to make sure the chapter page is always on a one column full page
+                 \onecolumn
+                 \cleardoublepage 
+                 \newgeometry{top = 4cm, bottom = 1cm, left = 2cm, right = 1cm}
+                 \begin{minipage}{.92\textwidth}
+                 \imtneOldChapter[{#1}]{#2}
+                 \end{minipage}
+                 \imtneChapterFigure
+                 \clearpage \newpage \restoregeometry \twocolumn
+             \else
+                 \cleardoublepage 
+                 \newgeometry{top = 4cm, bottom = 1cm, left = 2cm, right = 1cm}
+                 \begin{minipage}{.92\textwidth}
+                 \imtneOldChapter[{#1}]{#2}
+                 \end{minipage}
+                 \imtneChapterFigure
+                 \clearpage \newpage \restoregeometry
+             \fi
+         }
+     
+         % Finally, the chapter formatting is updated
+         \titleformat
+             {\chapter} % command
+             [display] % shape
+             {\bf\Huge} % format
+             {\chaptername{} \thechapter} % label
+             {1em} % sep
+             {\hspace{2em}\bf\Huge\thispagestyle{empty}} % before-code
+             [{}] % after-code ; does not accept \if statements
+     \else
+         % upper section number / title are defined
+         \let\imtneCoreOldSection\section
+         \renewcommand{\section}{\@ifstar{\imtneCoreStarSection}{\@dblarg\imtneCoreNoStarSection}}
+         \newcommand\imtneCoreStarSection[1]{%
+             \imtneCoreOldSection*{#1}  \gdef\imtneUpperSectionTitle{#1} \gdef\imtneUpperSectionNumber{\relax}}
+         \def\imtneCoreNoStarSection[#1]#2{%
+             \imtneCoreOldSection[{#1}]{#2} \gdef\imtneUpperSectionTitle{#1} \gdef\imtneUpperSectionNumber{\thesection. }}
+         \fi
+ \makeatother
+
+
+\newenvironment{imtneQuote}{%
+    \begin{quote}
+        \begin{mdframed}[backgroundcolor=imtneQuoteBackground, linewidth=0pt]
+            \textcolor{imtneLightBlue}{\Large \ding{125}}
+            \itshape\rmfamily\selectfont
+}{%
+            \textcolor{imtneLightBlue}{\Large \ding{126}}
+        \end{mdframed}
+    \end{quote}
+}
+
+%%%%%%%%%% END %%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%% 
